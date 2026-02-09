@@ -26,7 +26,8 @@
         </a>
       </div>
 
-      <!-- Auth Buttons -->
+      @if (!isLoggedIn()) {
+        <!-- Auth Buttons -->
       <div class="hidden md:flex items-center space-x-4">
         <a 
           routerLink="/login" 
@@ -41,6 +42,16 @@
           Sign Up
         </a>
       </div>
+      } @else {
+        <form (submit)="logOut()">
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer text-sm font-medium hover:bg-blue-700"
+          >
+            Log out
+          </button>
+        </form>
+      }
 
       <!-- Mobile menu button -->
       <div class="md:hidden">
