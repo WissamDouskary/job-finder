@@ -12,5 +12,10 @@ export class JobCardComponent {
     @Input() location = '';
     @Input() date = '';
     @Input() description = '';
-    @Input() salary = '';
+    @Input() levels = '';
+
+    formatDate(date: string){
+        const nDate = date.split("T")[0];
+        return `${nDate}`
+    }
 }

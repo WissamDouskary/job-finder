@@ -1,0 +1,64 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "nom": "mahmoud",
+      "prenom": "ahmad",
+      "email": "ahmad@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "2",
+      "nom": "sounil",
+      "prenom": "albert",
+      "email": "albert@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "6303",
+      "nom": "lamabara",
+      "prenom": "houssam",
+      "email": "houssam@gmail.com",
+      "password": "123"
+    },
+    {
+      "id": "b824",
+      "nom": "Sutton",
+      "prenom": "Lareina",
+      "email": "xumyhik@mailinator.com",
+      "password": "123456789"
+    },
+    {
+      "id": "0805",
+      "nom": "ya3tilo",
+      "prenom": "messi ",
+      "email": "messi@gmail.com",
+      "password": "123456789"
+    }
+  ],
+  "favorits": [
+    {
+      "id": "1",
+      "userId": 2,
+      "offerId": 101,
+      "title": "Développeur Angular",
+      "company": "Entreprise A",
+      "location": "Casablanca"
+    }
+  ],
+  "suivi": [
+    {
+      "id": "1",
+      "userId": 2,
+      "offerId": "101",
+      "apiSource": "adzuna",
+      "title": "Développeur Angular",
+      "company": "Entreprise A",
+      "location": "Casablanca",
+      "url": "https://...",
+      "status": "en_attente",
+      "notes": "Candidature envoyée le 10/02/2025. Relancer dans 2 semaines.",
+      "dateAdded": "2026-02-10T10:30:00Z"
+    }
+  ]
+}
