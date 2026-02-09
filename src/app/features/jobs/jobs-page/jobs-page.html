@@ -1,0 +1,59 @@
+<div class="bg-gray-50 min-h-screen pb-12">
+  <div class="bg-white border-b border-gray-200 mb-8 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Search Jobs</h1>
+      <p class="text-gray-600">Find your next career move</p>
+
+      <!-- Simplified Search Section -->
+      <div class="mt-8 flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <label class="sr-only">Keywords</label>
+          <input 
+            type="text" 
+            placeholder="Mots clés (titre du poste)..." 
+            class="w-full px-4 py-3 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          >
+        </div>
+        <div class="w-full md:w-64">
+          <label class="sr-only">Location</label>
+          <select class="w-full px-4 py-3 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none bg-white">
+            <option value="">Localisation</option>
+            <option value="paris">Paris, France</option>
+            <option value="remote">Remote</option>
+          </select>
+        </div>
+        <button class="bg-blue-600 text-white px-8 py-3 rounded font-medium hover:bg-blue-700">
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <app-job-card 
+        title="Senior Frontend Developer" 
+        company="Google" 
+        location="Paris, France" 
+        date="Aujourd'hui" 
+        description="Build great things with Angular."
+        salary="90k - 120k €"
+      />
+      <app-job-card 
+        title="Product Designer" 
+        company="Airbnb" 
+        location="Remote" 
+        date="Hier" 
+        description="Design the future of travel."
+        salary="90k - 100k"
+      />
+      <app-job-card 
+        title="Backend Engineer" 
+        company="Spotify" 
+        location="Stockholm" 
+        date="3 days ago" 
+        description="Scale our audio streaming."
+      />
+    </div>
+  </div>
+</div>

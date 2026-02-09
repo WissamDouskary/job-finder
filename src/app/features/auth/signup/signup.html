@@ -1,0 +1,113 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="max-w-md w-full bg-white p-8 border border-gray-200 rounded shadow-sm">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl font-bold text-gray-900">Sign Up</h2>
+      <p class="text-sm text-gray-600">Join our community</p>
+    </div>
+
+    <form (submit)="submitRegister()" class="space-y-4" [formGroup]="registrationForm">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="firstName" class="block text-sm font-medium text-gray-700">Prénom</label>
+          <input
+            formControlName="firstName"
+            id="firstName"
+            type="text"
+            class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+          <div
+            *ngIf="
+              registrationForm.get('firstName')?.touched &&
+              registrationForm.get('firstName')?.invalid
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="registrationForm.get('firstName')?.errors?.['required']">
+              first Name is required
+            </div>
+            <div *ngIf="registrationForm.get('firstName')?.errors?.['minlength']">
+              Min length is 4 caracters
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="lastName" class="block text-sm font-medium text-gray-700">Nom</label>
+          <input
+            formControlName="lastName"
+            id="lastName"
+            type="text"
+            class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+          <div
+            *ngIf="
+              registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.invalid
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="registrationForm.get('lastName')?.errors?.['required']">
+              last Name is required
+            </div>
+            <div *ngIf="registrationForm.get('lastName')?.errors?.['minlength']">
+              Min length is 4 caracters
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          formControlName="email"
+          id="email"
+          type="email"
+          class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+        <div
+          *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div *ngIf="registrationForm.get('email')?.errors?.['required']">email is required</div>
+          <div *ngIf="registrationForm.get('email')?.errors?.['email']">invalid email format</div>
+        </div>
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+        <input
+          formControlName="password"
+          id="password"
+          type="password"
+          class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+        <div
+          *ngIf="
+            registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          <div *ngIf="registrationForm.get('password')?.errors?.['required']">
+            password is required
+          </div>
+          <div *ngIf="registrationForm.get('password')?.errors?.['minlength']">
+            min length is 8 caracters
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="registrationForm.invalid"
+        class="w-full flex justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+      >
+        Register
+      </button>
+    </form>
+
+    <div class="mt-6 text-center">
+      <p class="text-sm text-gray-600">
+        Already have an account?
+        <a routerLink="/login" class="text-blue-600 hover:underline">Log in</a>
+      </p>
+    </div>
+  </div>
+</div>
