@@ -12,12 +12,21 @@ export class UserService {
   private URL = envVariables.API_URL;
   private _httpClient = inject(HttpClient);
 
-  register(body: user): Observable<userResponse> {
+  register(body: user): Observable<user> {
     return this._httpClient.post<user>(`${this.URL}/users`, body);
   }
 
   getAllUsers(): Observable<user[]> {
     return this._httpClient.get<user[]>(`${this.URL}/users`);
+  }
+
+  updateUser(user: user): Observable<user> {
+    return this._httpClient.put<user>(`${this.URL}/users/${user.id}`, user);
+  }
+
+  getCurrentUser(): user | null {
+    const userJson = localStorage.getItem("user");
+    return userJson ? JSON.parse(userJson) : null;
   }
 
   login(payload: Login): Observable<user | boolean> {
@@ -31,7 +40,7 @@ export class UserService {
     );
   }
 
-  logOut(){
+  logOut() {
     localStorage.removeItem("user");
   }
 

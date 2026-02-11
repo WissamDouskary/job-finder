@@ -1,0 +1,37 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <h2>My Profile</h2>
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+      <div class="form-group">
+        <label for="prenom">First Name</label>
+        <input type="text" id="prenom" formControlName="prenom" placeholder="Enter your first name">
+        <div *ngIf="profileForm.get('prenom')?.touched && profileForm.get('prenom')?.invalid" class="error">
+          First name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nom">Last Name</label>
+        <input type="text" id="nom" formControlName="nom" placeholder="Enter your last name">
+        <div *ngIf="profileForm.get('nom')?.touched && profileForm.get('nom')?.invalid" class="error">
+          Last name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" placeholder="Enter new password">
+        <div *ngIf="profileForm.get('password')?.touched && profileForm.get('password')?.invalid" class="error">
+          Password must be at least 4 characters
+        </div>
+      </div>
+
+      <button type="submit" class="update-btn">Update Profile</button>
+    </form>
+  </div>
+</div>
