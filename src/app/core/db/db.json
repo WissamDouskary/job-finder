@@ -51,6 +51,22 @@
       "title": "Développeur Angular",
       "company": "Entreprise A",
       "location": "Casablanca"
+    },
+    {
+      "id": "53a2",
+      "userId": 805,
+      "offerId": 21157352,
+      "title": "Assistant Site Manager",
+      "company": "DoorDash",
+      "location": "Wyoming, MI"
+    },
+    {
+      "id": "3771",
+      "userId": 805,
+      "offerId": 21170794,
+      "title": "Temporary Pre Sale Experience Coordinator",
+      "company": "Sotheby's",
+      "location": "New York, NY"
     }
   ],
   "suivi": [
