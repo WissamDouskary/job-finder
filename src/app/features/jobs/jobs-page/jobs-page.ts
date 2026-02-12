@@ -1,17 +1,16 @@
-import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { Component, inject, OnInit, signal, DestroyRef, ChangeDetectorRef } from '@angular/core';
 import { JobCardComponent } from '../../../shared/components/job-card/job-card';
 import { jobService } from '../../../core/services/jobs.service';
-import { job } from '../../../core/models/job.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { jobResponse } from '../../../core/models/job-resp.model';
-import { NgIf } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CommonModule, NgIf, UpperCasePipe } from '@angular/common';
+import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-jobs-page',
   standalone: true,
-  imports: [JobCardComponent, NgIf],
+  imports: [JobCardComponent, NgIf, CommonModule, FormsModule],
   templateUrl: './jobs-page.html',
   styleUrl: './jobs-page.css',
 })
@@ -19,28 +18,96 @@ export class JobsPageComponent implements OnInit {
   private _jobService = inject(jobService);
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
-  private _destroyRef = inject(DestroyRef);
+  private _cd = inject(ChangeDetectorRef);
 
   currentPage = signal(1);
+
+  searchTerm = '';
+  allJobs = signal<jobResponse | null>(null);
   jobs = signal<jobResponse | null>(null);
+  selectedCategory: string = 'non';
+  selectedLocation: string = 'non';
 
   ngOnInit(): void {
-    this._route.queryParamMap
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((params) => {
-        const page = Number(params.get('page')) || 1;
-        const category = params.get('category') || undefined;
-        const location = params.get('location') || undefined;
-        this.loadJobs(page, category, location);
-      });
+    this._route.queryParamMap.subscribe((params) => {
+      const page = Number(params.get('page')) || 1;
+      const category = params.get('category') || undefined;
+      const location = params.get('location') || undefined;
+      this.loadJobs(page, category, location);
+      console.log(this.allJobs()?.results);
+    });
   }
 
   private loadJobs(page: number, category?: string, location?: string) {
     this.currentPage.set(page);
     this._jobService.getAllJobs(page, category, location).subscribe({
-      next: (resp) => this.jobs.set(resp),
-      error: () => toast.error('Error retrieving jobs. Please try again later.'),
+      next: (resp) => {
+        this.jobs.set(resp);
+        this.allJobs.set(resp);
+      },
+      error: () => toast.error('Error retrieving jobs. Please try again later'),
     });
+  }
+
+  filterByLocation(e: Event) {
+    const filterTerm = (e.target as HTMLInputElement)?.value;
+    if (filterTerm === 'non') {
+      this._router.navigate([], {
+        relativeTo: this._route,
+        queryParams: { location: null },
+        queryParamsHandling: 'merge',
+      });
+      return;
+    }
+
+    this._router.navigate([], {
+      relativeTo: this._route,
+      queryParams: { location: filterTerm },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  filterByCategory(e: Event) {
+    const filterTerm = (e.target as HTMLInputElement)?.value;
+
+    if (filterTerm === 'non') {
+      this._router.navigate([], {
+        relativeTo: this._route,
+        queryParams: { category: null },
+        queryParamsHandling: 'merge',
+      });
+      return;
+    }
+
+    this._router.navigate([], {
+      relativeTo: this._route,
+      queryParams: { category: filterTerm },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  resetFilters() {
+    this._router.navigate([], {
+      relativeTo: this._route,
+      queryParams: {
+        location: null,
+        category: null,
+        page: 1,
+      },
+      queryParamsHandling: 'merge',
+    });
+
+    this.searchTerm = '';
+    this.selectedCategory = 'non';
+    this.selectedLocation = 'non';
+  }
+
+  onSearch() {
+    const source = this.allJobs();
+    if (!source) return;
+    const term = this.searchTerm.toLowerCase();
+    const filtred = source.results.filter((j) => j.name.toLowerCase().includes(term));
+    this.jobs.set({ ...source, results: filtred, page_count: filtred.length });
   }
 
   goToPage(page: number) {
