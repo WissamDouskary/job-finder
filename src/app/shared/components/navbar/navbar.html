@@ -1,61 +1,53 @@
-<nav class="bg-white border-b border-gray-200">
+<nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100/50 safe-shadow">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16 items-center">
+    <div class="flex justify-between h-20 items-center">
       <!-- Logo -->
-      <div class="flex-shrink-0">
-        <a routerLink="/" class="text-xl font-bold text-blue-600">
-          JobFinder
+      <div class="flex-shrink-0 flex items-center gap-2">
+        <a routerLink="/" class="text-xl font-bold tracking-tight text-gray-900">
+          Job<span class="text-emerald-600">Finder</span>
         </a>
       </div>
 
       <!-- Main Navigation -->
-      <div class="hidden md:flex space-x-8">
+      <div class="hidden md:flex items-center space-x-1">
         <a 
           routerLink="/jobs" 
-          routerLinkActive="text-blue-600 border-b-2 border-blue-600"
-          class="text-gray-500 hover:text-gray-700 px-1 py-5 text-sm font-medium"
+          routerLinkActive="bg-emerald-50 text-emerald-700"
+          [routerLinkActiveOptions]="{exact: true}"
+          class="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
         >
-          Jobs
+          Explore Jobs
         </a>
         <a 
           routerLink="/favorites" 
-          routerLinkActive="text-blue-600 border-b-2 border-blue-600"
-          class="text-gray-500 hover:text-gray-700 px-1 py-5 text-sm font-medium"
+          routerLinkActive="bg-emerald-50 text-emerald-700"
+          class="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
         >
-          Favorites
+          My Favorites
         </a>
       </div>
 
-      @if (!isLoggedIn()) {
-        <!-- Auth Buttons -->
-      <div class="hidden md:flex items-center space-x-4">
-        <a 
-          routerLink="/login" 
-          class="text-gray-500 hover:text-gray-700 text-sm font-medium"
-        >
-          Login
-        </a>
-        <a 
-          routerLink="/signup" 
-          class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700"
-        >
-          Sign Up
-        </a>
-      </div>
-      } @else {
-        <form (submit)="logOut()">
-          <button
-            type="submit"
-            class="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer text-sm font-medium hover:bg-blue-700"
-          >
-            Log out
-          </button>
-        </form>
-      }
+      <div class="flex items-center space-x-4">
+        @if (!isLoggedIn()) {
+          <a routerLink="/login" class="text-gray-600 hover:text-gray-900 text-sm font-semibold px-4 py-2">
+            Log in
+          </a>
+          <a routerLink="/signup" class="btn-primary">
+            Get Started
+          </a>
+        } @else {
+          <a routerLink="/profile" class="text-gray-600 hover:text-gray-900 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors">
+            Profile
+          </a>
+          <form (submit)="logOut()">
+            <button type="submit" class="btn-secondary !py-2">
+              Log out
+            </button>
+          </form>
+        }
 
-      <!-- Mobile menu button -->
-      <div class="md:hidden">
-        <button class="text-gray-500 hover:text-gray-700 p-2">
+        <!-- Mobile toggle -->
+        <button class="md:hidden text-gray-500 hover:bg-gray-100 p-2 rounded-xl transition-colors">
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
           </svg>

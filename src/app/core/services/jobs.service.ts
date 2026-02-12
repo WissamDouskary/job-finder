@@ -5,12 +5,12 @@ import { Observable } from "rxjs";
 import { job } from "../models/job.model";
 import { jobResponse } from "../models/job-resp.model";
 
-@Injectable({providedIn: "root"})
+@Injectable({ providedIn: "root" })
 export class jobService {
-    private _httpClient = inject(HttpClient);
-    private API_THEMUSE = envVariables.API_THEMUSE;
+  private _httpClient = inject(HttpClient);
+  private API_THEMUSE = envVariables.API_THEMUSE;
 
-    getAllJobs(page?: number, category?: string, location?: string): Observable<jobResponse>{
+  getAllJobs(page?: number, category?: string, location?: string): Observable<jobResponse> {
     let params = new HttpParams();
 
     if (page !== undefined) {
@@ -26,5 +26,9 @@ export class jobService {
     }
 
     return this._httpClient.get<jobResponse>(`${this.API_THEMUSE}/jobs`, { params });
+  }
+
+  getJobById(id: string): Observable<job> {
+    return this._httpClient.get<job>(`${this.API_THEMUSE}/jobs/${id}`);
   }
 }
