@@ -29,13 +29,13 @@ export class UserService {
     return userJson ? JSON.parse(userJson) : null;
   }
 
-  login(payload: Login): Observable<user | boolean> {
+  login(payload: Login): Observable<userResponse | boolean> {
     return this.getAllUsers().pipe(
       map((users: user[]) => {
         if (users.length === 0) {
           return false;
         }
-        return users.find(u => u.email === payload.email && u.password === payload.password) || false;
+        return users.find(u => u.email === payload.email && u.password === payload.password) as userResponse || false;
       })
     );
   }
