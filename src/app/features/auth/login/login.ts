@@ -23,6 +23,7 @@ export class LoginComponent {
   loginForm = this._fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
+    rememberMe: [false],
   });
 
   submitLogin() {
@@ -36,7 +37,9 @@ export class LoginComponent {
       password: this.loginForm.value.password!,
     };
 
-    this._userService.login(payload).subscribe({
+    const rememberMe = this.loginForm.value.rememberMe!;
+
+    this._userService.login(payload, rememberMe).subscribe({
       next: (resp: userResponse | boolean) => {
         const user = resp as userResponse;
 
@@ -47,7 +50,7 @@ export class LoginComponent {
           id: user.id
         };
 
-        localStorage.setItem('user', JSON.stringify(nUser));
+        this._userService.saveUser(nUser, rememberMe);
         toast.success('login successfuly');
         this._router.navigate(['/jobs']);
       },

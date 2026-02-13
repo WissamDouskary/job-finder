@@ -25,11 +25,25 @@ export class UserService {
   }
 
   getCurrentUser(): user | null {
-    const userJson = localStorage.getItem("user");
+    let userJson = localStorage.getItem("user");
+    if (!userJson) {
+      userJson = sessionStorage.getItem("user");
+    }
     return userJson ? JSON.parse(userJson) : null;
   }
 
-  login(payload: Login): Observable<userResponse | boolean> {
+  saveUser(user: userResponse, rememberMe: boolean): void {
+    const userJson = JSON.stringify(user);
+    if (rememberMe) {
+      localStorage.setItem('user', userJson);
+      sessionStorage.removeItem('user');
+    } else {
+      sessionStorage.setItem('user', userJson);
+      localStorage.removeItem('user');
+    }
+  }
+
+  login(payload: Login, rememberMe: boolean = false): Observable<userResponse | boolean> {
     return this.getAllUsers().pipe(
       map((users: user[]) => {
         if (users.length === 0) {
@@ -42,9 +56,10 @@ export class UserService {
 
   logOut() {
     localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem("user");
+    return !!localStorage.getItem("user") || !!sessionStorage.getItem("user");
   }
 }
