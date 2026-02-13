@@ -43,20 +43,46 @@
       "password": "123456789"
     }
   ],
-  "favorits": [],
+  "favorits": [
+    {
+      "id": "89bb",
+      "userId": "00c2",
+      "offerId": 21157352,
+      "title": "Assistant Site Manager",
+      "company": "DoorDash",
+      "location": "Wyoming, MI"
+    },
+    {
+      "id": "2d94",
+      "userId": "00c2",
+      "offerId": 17780767,
+      "title": "Nurse Care Manager (RN)",
+      "company": "Hartford HealthCare",
+      "location": "Ledyard, CT"
+    }
+  ],
   "suivi": [
     {
-      "id": "1",
-      "userId": 2,
-      "offerId": "101",
-      "apiSource": "adzuna",
-      "title": "Développeur Angular",
-      "company": "Entreprise A",
-      "location": "Casablanca",
-      "url": "https://...",
+      "id": "cba6",
+      "userId": "00c2",
+      "offerId": 17780767,
+      "title": "Nurse Care Manager (RN)",
+      "company": "Hartford HealthCare",
+      "location": "Ledyard, CT",
+      "status": "accepte",
+      "notes": "modooooooooooooooooooooooooo",
+      "dateAdded": "2026-02-13T14:48:05.709Z"
+    },
+    {
+      "id": "3eaf",
+      "userId": "00c2",
+      "offerId": 21157352,
+      "title": "Assistant Site Manager",
+      "company": "DoorDash",
+      "location": "Wyoming, MI",
       "status": "en_attente",
-      "notes": "Candidature envoyée le 10/02/2025. Relancer dans 2 semaines.",
-      "dateAdded": "2026-02-10T10:30:00Z"
+      "notes": "",
+      "dateAdded": "2026-02-13T14:53:11.217Z"
     }
   ]
 }

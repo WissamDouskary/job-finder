@@ -4,19 +4,19 @@ import { jobService } from '../../../core/services/jobs.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { jobResponse } from '../../../core/models/job-resp.model';
-import { CommonModule, UpperCasePipe } from '@angular/common';
+import { CommonModule, NgIf, UpperCasePipe } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectAllFavorites } from '../../../core/store/favorites/favorite.selectors';
 import { userResponse } from '../../../core/models/user-response.model';
 import { loadFavorites } from '../../../core/store/favorites/favorite.actions';
 import { map } from 'rxjs';
-import { Favorite } from '../../../core/models/favorite.model';
+import { SuiviService } from '../../../core/services/suivi.service';
 
 @Component({
   selector: 'app-jobs-page',
   standalone: true,
-  imports: [JobCardComponent, CommonModule, FormsModule],
+  imports: [JobCardComponent, NgIf, CommonModule, FormsModule],
   templateUrl: './jobs-page.html',
   styleUrl: './jobs-page.css',
 })
@@ -26,6 +26,9 @@ export class JobsPageComponent implements OnInit {
   private _router = inject(Router);
   private _store = inject(Store);
   public $favorites = this._store.select(selectAllFavorites);
+
+  private _suiviService = inject(SuiviService);
+  trackedIds = signal<number[]>([]);
 
   currentPage = signal(1);
 
@@ -48,6 +51,7 @@ export class JobsPageComponent implements OnInit {
     if (authUser) {
       const user: userResponse = JSON.parse(authUser);
       this._store.dispatch(loadFavorites({ id: user.id }));
+      this.loadTrackedJobs(user.id);
     }
   }
 
@@ -143,8 +147,19 @@ export class JobsPageComponent implements OnInit {
   }
 
   isFavorite$(offerId: number) {
-    return this.$favorites.pipe(
-      map((favs) => favs.some((f) => f.offerId === offerId)),
-    );
+    return this.$favorites.pipe(map((favs) => favs.some((f) => f.offerId === offerId)));
+  }
+
+  private loadTrackedJobs(userId: string) {
+    this._suiviService.getAllSuivis(userId).subscribe({
+      next: (suivis) => {
+        this.trackedIds.set(suivis.map((s) => s.offerId));
+      },
+      error: () => toast.error('Error retrieving tracked jobs. Please try again later'),
+    });
+  }
+
+  isTracked(offerId: number) {
+    return this.trackedIds().includes(offerId);
   }
 }
