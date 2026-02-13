@@ -1,4 +1,4 @@
-import { Component, inject, Input, input } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Favorite } from '../../../core/models/favorite.model';
 import { userResponse } from '../../../core/models/user-response.model';
@@ -7,6 +7,8 @@ import { addFavorite, removeFavorite } from '../../../core/store/favorites/favor
 import { toast } from 'ngx-sonner';
 import { selectAllFavorites } from '../../../core/store/favorites/favorite.selectors';
 import { take } from 'rxjs';
+import { SuiviService } from '../../../core/services/suivi.service';
+import { Suivi } from '../../../core/models/suivi.model';
 
 @Component({
   selector: 'app-job-card',
@@ -18,6 +20,8 @@ import { take } from 'rxjs';
 export class JobCardComponent {
   private _router = inject(Router);
   private _store = inject(Store);
+  private _suiviService = inject(SuiviService);
+  private _cdr = inject(ChangeDetectorRef)
 
   @Input() id = 0;
   @Input() title = '';
@@ -27,6 +31,8 @@ export class JobCardComponent {
   @Input() description = '';
   @Input() levels = '';
   @Input() isFavorite = false;
+  @Input() isTracked = false;
+  @Input() showTrackButton = true;
 
   formatDate(date: string) {
     const nDate = date.split('T')[0];
@@ -68,6 +74,47 @@ export class JobCardComponent {
       this._store.dispatch(addFavorite({ favorite: favoritePayload }));
       toast.success('Job added to favorites');
       return;
+    });
+    return;
+  }
+
+  trackJob() {
+    const authUser = localStorage.getItem('user');
+    if (!authUser) return this._router.navigate(['/login']);
+
+    let user: userResponse;
+    try {
+      user = JSON.parse(authUser);
+    } catch (e) {
+      localStorage.removeItem('user');
+      return this._router.navigate(['/login']);
+    }
+
+    const payload: Suivi = {
+      userId: user.id,
+      offerId: this.id,
+      title: this.title,
+      company: this.company,
+      location: this.location,
+      status: 'en_attente',
+      notes: '',
+      dateAdded: new Date().toISOString(),
+    };
+
+    this._suiviService.getAllSuivis(user.id).pipe(take(1)).subscribe((suivis) => {
+      const exists = suivis.some(s => s.offerId === this.id && s.userId === user.id);
+      if (exists) {
+        toast.error('Vous suivez déjà cette candidature !');
+        return;
+      }
+      this._suiviService.addSuivi(payload).subscribe({
+        next: () => {
+          this.isTracked = true;
+          toast.success('Candidature ajoutée au suivi');
+          this._cdr.detectChanges()
+        },
+        error: () => toast.error('Erreur lors de l\'ajout au suivi'),
+      });
     });
     return;
   }
