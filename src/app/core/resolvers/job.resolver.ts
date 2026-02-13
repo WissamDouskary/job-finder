@@ -6,5 +6,5 @@ import { job } from '../models/job.model';
 export const jobResolver: ResolveFn<job> = (route, state) => {
     const service = inject(jobService);
     const id = route.paramMap.get('id')!;
-    return service.getJobById(id);
+    return service.getJobById(Number(id));
 };
