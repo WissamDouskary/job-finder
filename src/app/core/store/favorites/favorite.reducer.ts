@@ -14,14 +14,48 @@ export const favoritesReducer = createReducer(
         ...state,
     })),
 
-    on(FavoritesActions.addFavoriteSucess, (state, {favorite}) => ({
-        favorites: [...state.favorites, favorite],
-        error: null
+    on(FavoritesActions.addFavoriteSucess, (state, { favorite }) => {
+        const alreadyExists = state.favorites.some(
+            (fav) => fav.offerId === favorite.offerId && fav.userId === favorite.userId,
+        );
+        return {
+            ...state,
+            favorites: alreadyExists ? state.favorites : [...state.favorites, favorite],
+            error: null,
+        };
+    }),
+
+    on(FavoritesActions.addFavoriteError, (state, { error }) => ({
+        ...state,
+        error: error
     })),
 
-    on(FavoritesActions.addFavoriteError, (state, {error}) => ({
+    on(FavoritesActions.loadFavorites, (state) => ({
+        ...state
+    })),
+
+    on(FavoritesActions.loadFavoritesSuccess, (state, { favorites }) => ({
         ...state,
-        favorites: [],
-        error: error
+        favorites
+    })),
+
+    on(FavoritesActions.loadFavoritesError, (state, { error }) => ({
+        ...state,
+        error
+    })),
+
+    on(FavoritesActions.removeFavorite, (state) => ({
+        ...state,
+    })),
+
+    on(FavoritesActions.removeFavoriteSuccess, (state, { favoriteId }) => ({
+        ...state,
+        favorites: state.favorites.filter((fav) => fav.id !== favoriteId),
+        error: null,
+    })),
+
+    on(FavoritesActions.removeFavoriteError, (state, { error }) => ({
+        ...state,
+        error,
     }))
 )
