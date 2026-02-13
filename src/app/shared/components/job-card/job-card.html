@@ -74,7 +74,19 @@
     </div>
 
     <div class="flex items-center justify-between pt-4 border-t border-gray-50">
-      <p class="text-sm text-gray-500 font-medium"></p>
+      @if (showTrackButton) {
+        <button
+          (click)="trackJob()"
+          class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all cursor-pointer"
+          [class]="isTracked
+            ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+            : 'bg-gray-50 text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 border border-gray-100 hover:border-emerald-200'"
+        >
+          {{ isTracked ? '✓ Suivi en cours' : 'Suivre cette candidature' }}
+        </button>
+      } @else {
+        <p class="text-sm text-gray-500 font-medium"></p>
+      }
       <a
         [routerLink]="['/job', id]"
         class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all group shadow-sm"
