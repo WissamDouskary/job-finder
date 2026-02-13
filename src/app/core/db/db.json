@@ -22,37 +22,28 @@
       "password": "123"
     },
     {
-      "id": "b824",
+      "id": "1001",
       "nom": "Sutton",
       "prenom": "Lareina",
       "email": "xumyhik@mailinator.com",
       "password": "123456789"
     },
     {
-      "id": "0805",
+      "id": "1002",
       "nom": "ya3tilo",
       "prenom": "messi ",
       "email": "messi@gmail.com",
       "password": "123456789"
     },
     {
-      "id": "00c2",
+      "id": "1003",
       "nom": "test",
       "prenom": "wis",
       "email": "test@gmail.com",
       "password": "123456789"
     }
   ],
-  "favorits": [
-    {
-      "id": "1",
-      "userId": 2,
-      "offerId": 101,
-      "title": "Développeur Angular",
-      "company": "Entreprise A",
-      "location": "Casablanca"
-    }
-  ],
+  "favorits": [],
   "suivi": [
     {
       "id": "1",

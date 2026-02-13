@@ -28,7 +28,7 @@ export class jobService {
     return this._httpClient.get<jobResponse>(`${this.API_THEMUSE}/jobs`, { params });
   }
 
-  getJobById(id: string): Observable<job> {
+  getJobById(id: number): Observable<job> {
     return this._httpClient.get<job>(`${this.API_THEMUSE}/jobs/${id}`);
   }
 }

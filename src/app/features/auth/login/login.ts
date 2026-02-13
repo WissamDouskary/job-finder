@@ -37,14 +37,23 @@ export class LoginComponent {
     };
 
     this._userService.login(payload).subscribe({
-      next: (resp) => {
-        localStorage.setItem('user', JSON.stringify(resp));
+      next: (resp: userResponse | boolean) => {
+        const user = resp as userResponse;
+
+        const nUser: userResponse = {
+          nom: user.nom,
+          prenom: user.prenom,
+          email: user.email,
+          id: user.id
+        };
+
+        localStorage.setItem('user', JSON.stringify(nUser));
         toast.success('login successfuly');
         this._router.navigate(['/jobs']);
       },
       error: () => {
         toast.error('invalid credentials');
-      }
+      },
     });
   }
 }

@@ -82,6 +82,7 @@
             [date]="item.publication_date"
             [description]="item.contents"
             [levels]="item.levels[0].name"
+            [isFavorite]="(isFavorite$(item.id) | async) ?? false"
           />
         }
       </div>

@@ -4,13 +4,19 @@ import { jobService } from '../../../core/services/jobs.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { jobResponse } from '../../../core/models/job-resp.model';
-import { CommonModule, NgIf, UpperCasePipe } from '@angular/common';
+import { CommonModule, UpperCasePipe } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { selectAllFavorites } from '../../../core/store/favorites/favorite.selectors';
+import { userResponse } from '../../../core/models/user-response.model';
+import { loadFavorites } from '../../../core/store/favorites/favorite.actions';
+import { map } from 'rxjs';
+import { Favorite } from '../../../core/models/favorite.model';
 
 @Component({
   selector: 'app-jobs-page',
   standalone: true,
-  imports: [JobCardComponent, NgIf, CommonModule, FormsModule],
+  imports: [JobCardComponent, CommonModule, FormsModule],
   templateUrl: './jobs-page.html',
   styleUrl: './jobs-page.css',
 })
@@ -18,7 +24,8 @@ export class JobsPageComponent implements OnInit {
   private _jobService = inject(jobService);
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
-  private _cd = inject(ChangeDetectorRef);
+  private _store = inject(Store);
+  public $favorites = this._store.select(selectAllFavorites);
 
   currentPage = signal(1);
 
@@ -27,6 +34,7 @@ export class JobsPageComponent implements OnInit {
   jobs = signal<jobResponse | null>(null);
   selectedCategory: string = 'non';
   selectedLocation: string = 'non';
+  isFavorite = signal<boolean>(false);
 
   ngOnInit(): void {
     this._route.queryParamMap.subscribe((params) => {
@@ -36,6 +44,11 @@ export class JobsPageComponent implements OnInit {
       this.loadJobs(page, category, location);
       console.log(this.allJobs()?.results);
     });
+    const authUser = localStorage.getItem('user');
+    if (authUser) {
+      const user: userResponse = JSON.parse(authUser);
+      this._store.dispatch(loadFavorites({ id: user.id }));
+    }
   }
 
   private loadJobs(page: number, category?: string, location?: string) {
@@ -127,5 +140,11 @@ export class JobsPageComponent implements OnInit {
 
   prevPage() {
     this.goToPage(this.currentPage() - 1);
+  }
+
+  isFavorite$(offerId: number) {
+    return this.$favorites.pipe(
+      map((favs) => favs.some((f) => f.offerId === offerId)),
+    );
   }
 }
