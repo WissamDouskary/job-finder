@@ -12,6 +12,7 @@ import { userResponse } from '../../../core/models/user-response.model';
 import { loadFavorites } from '../../../core/store/favorites/favorite.actions';
 import { map } from 'rxjs';
 import { SuiviService } from '../../../core/services/suivi.service';
+import { UserService } from '../../../core/services/users.service';
 
 @Component({
   selector: 'app-jobs-page',
@@ -25,6 +26,7 @@ export class JobsPageComponent implements OnInit {
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
   private _store = inject(Store);
+  private _userService = inject(UserService);
   public $favorites = this._store.select(selectAllFavorites);
 
   private _suiviService = inject(SuiviService);
@@ -47,11 +49,10 @@ export class JobsPageComponent implements OnInit {
       this.loadJobs(page, category, location);
       console.log(this.allJobs()?.results);
     });
-    const authUser = localStorage.getItem('user');
-    if (authUser) {
-      const user: userResponse = JSON.parse(authUser);
-      this._store.dispatch(loadFavorites({ id: user.id }));
-      this.loadTrackedJobs(user.id);
+    const user = this._userService.getCurrentUser();
+    if (user) {
+      this._store.dispatch(loadFavorites({ id: user.id! }));
+      this.loadTrackedJobs(user.id!);
     }
   }
 

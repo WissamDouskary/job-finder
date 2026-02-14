@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SuiviService } from '../../../core/services/suivi.service';
 import { Suivi, SuiviStatus } from '../../../core/models/suivi.model';
 import { userResponse } from '../../../core/models/user-response.model';
+import { UserService } from '../../../core/services/users.service';
 import { toast } from 'ngx-sonner';
 import { NgClass } from '@angular/common';
 
@@ -16,6 +17,7 @@ import { NgClass } from '@angular/common';
 })
 export class MyJobsPageComponent implements OnInit {
   private _suiviService = inject(SuiviService);
+  private _userService = inject(UserService);
   private _router = inject(Router);
 
   suivis = signal<Suivi[]>([]);
@@ -25,13 +27,12 @@ export class MyJobsPageComponent implements OnInit {
   }
 
   loadSuivis() {
-    const authUser = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (!authUser) {
+    const user = this._userService.getCurrentUser();
+    if (!user) {
       this._router.navigate(['/login']);
       return;
     }
-    const user: userResponse = JSON.parse(authUser);
-    this._suiviService.getAllSuivis(user.id).subscribe({
+    this._suiviService.getAllSuivis(user.id!).subscribe({
       next: (data) => this.suivis.set(data),
       error: () => toast.error('Erreur lors du chargement des candidatures'),
     });

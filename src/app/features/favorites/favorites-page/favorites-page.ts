@@ -7,6 +7,7 @@ import { selectAllFavorites } from '../../../core/store/favorites/favorite.selec
 import { AsyncPipe } from '@angular/common';
 import { JobCardComponent } from '../../../shared/components/job-card/job-card';
 import { SuiviService } from '../../../core/services/suivi.service';
+import { UserService } from '../../../core/services/users.service';
 import { toast } from 'ngx-sonner';
 
 @Component({
@@ -18,6 +19,7 @@ import { toast } from 'ngx-sonner';
 export class FavoritesPageComponent implements OnInit {
   private _store = inject(Store);
   private _router = inject(Router);
+  private _userService = inject(UserService);
   public favorites$ = this._store.select(selectAllFavorites);
   private _suiviService = inject(SuiviService);
 
@@ -25,18 +27,16 @@ export class FavoritesPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFavorites();
-    const authUser = localStorage.getItem('user');
-    if (authUser) {
-      const user: userResponse = JSON.parse(authUser);
-      this.loadTrackedJobs(user.id);
+    const user = this._userService.getCurrentUser();
+    if (user) {
+      this.loadTrackedJobs(user.id!);
     }
   }
 
   loadFavorites() {
-    const authUser: userResponse | string | null = localStorage.getItem('user') ||  sessionStorage.getItem("user");
-    if (!authUser) return this._router.navigate(['/login']);
-    const user: userResponse = JSON.parse(authUser);
-    this._store.dispatch(loadFavorites({ id: user.id }));
+    const user = this._userService.getCurrentUser();
+    if (!user) return this._router.navigate(['/login']);
+    this._store.dispatch(loadFavorites({ id: user.id! }));
     return;
   }
 

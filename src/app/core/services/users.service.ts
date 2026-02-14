@@ -24,12 +24,14 @@ export class UserService {
     return this._httpClient.put<user>(`${this.URL}/users/${user.id}`, user);
   }
 
-  getCurrentUser(): user | null {
-    let userJson = localStorage.getItem("user");
-    if (!userJson) {
-      userJson = sessionStorage.getItem("user");
+  getCurrentUser(): userResponse | null {
+    let userJson = localStorage.getItem("user") || sessionStorage.getItem("user");
+    if (!userJson) return null;
+    try {
+      return JSON.parse(userJson) as userResponse;
+    } catch {
+      return null;
     }
-    return userJson ? JSON.parse(userJson) : null;
   }
 
   saveUser(user: userResponse, rememberMe: boolean): void {
@@ -60,6 +62,10 @@ export class UserService {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem("user") || !!sessionStorage.getItem("user");
+    return !!this.getCurrentUser();
+  }
+
+  isRemembered(): boolean {
+    return !!localStorage.getItem('user');
   }
 }

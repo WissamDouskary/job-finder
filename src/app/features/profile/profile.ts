@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/users.service';
 import { user } from '../../core/models/user.model';
+import { userResponse } from '../../core/models/user-response.model';
 import { toast } from 'ngx-sonner';
 import { NgIf } from '@angular/common';
 
@@ -27,17 +28,25 @@ export class ProfileComponent implements OnInit {
     });
 
     ngOnInit() {
-        this.currentUser = this._userService.getCurrentUser();
-        if (this.currentUser) {
-            this.profileForm.patchValue({
-                nom: this.currentUser.nom,
-                prenom: this.currentUser.prenom,
-                email: this.currentUser.email,
-                password: this.currentUser.password
-            });
-        } else {
+        const storedUser = this._userService.getCurrentUser();
+        if (!storedUser) {
             this._router.navigate(['/login']);
+            return;
         }
+
+        this._userService.getAllUsers().subscribe({
+            next: (users) => {
+                this.currentUser = users.find(u => u.id === storedUser.id) || null;
+                if (this.currentUser) {
+                    this.profileForm.patchValue({
+                        nom: this.currentUser.nom,
+                        prenom: this.currentUser.prenom,
+                        email: this.currentUser.email,
+                        password: this.currentUser.password
+                    });
+                }
+            }
+        });
     }
 
     updateProfile() {
@@ -56,7 +65,7 @@ export class ProfileComponent implements OnInit {
 
         this._userService.updateUser(updatedUser).subscribe({
             next: (resp: user) => {
-                localStorage.setItem('user', JSON.stringify(resp));
+                this._userService.saveUser(resp as userResponse, this._userService.isRemembered());
                 toast.success('Profile updated successfully');
             },
             error: () => {

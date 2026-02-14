@@ -42,6 +42,11 @@ export class LoginComponent {
 
     this._userService.login(payload, rememberMe).subscribe({
       next: (resp: userResponse | boolean) => {
+        if (resp === false || !resp) {
+          toast.error('invalid credentials');
+          return;
+        }
+
         const user = resp as userResponse;
 
         const nUser: userResponse = {

@@ -9,6 +9,7 @@ import { selectAllFavorites } from '../../../core/store/favorites/favorite.selec
 import { take } from 'rxjs';
 import { SuiviService } from '../../../core/services/suivi.service';
 import { Suivi } from '../../../core/models/suivi.model';
+import { UserService } from '../../../core/services/users.service';
 
 @Component({
   selector: 'app-job-card',
@@ -21,6 +22,7 @@ export class JobCardComponent {
   private _router = inject(Router);
   private _store = inject(Store);
   private _suiviService = inject(SuiviService);
+  private _userService = inject(UserService);
   private _cdr = inject(ChangeDetectorRef)
 
   @Input() id = 0;
@@ -41,19 +43,11 @@ export class JobCardComponent {
 
   addToFavorite(id: number) {
     const favorites$ = this._store.select(selectAllFavorites);
-    const authUser = localStorage.getItem('user');
-    if (!authUser) return this._router.navigate(['/login']);
-
-    let user: userResponse;
-    try {
-      user = JSON.parse(authUser);
-    } catch (e) {
-      localStorage.removeItem('user');
-      return this._router.navigate(['/login']);
-    }
+    const user = this._userService.getCurrentUser();
+    if (!user) return this._router.navigate(['/login']);
 
     const favoritePayload: Favorite = {
-      userId: user.id,
+      userId: user.id!,
       offerId: id,
       title: this.title,
       company: this.company,
@@ -79,19 +73,11 @@ export class JobCardComponent {
   }
 
   trackJob() {
-    const authUser = localStorage.getItem('user');
-    if (!authUser) return this._router.navigate(['/login']);
-
-    let user: userResponse;
-    try {
-      user = JSON.parse(authUser);
-    } catch (e) {
-      localStorage.removeItem('user');
-      return this._router.navigate(['/login']);
-    }
+    const user = this._userService.getCurrentUser();
+    if (!user) return this._router.navigate(['/login']);
 
     const payload: Suivi = {
-      userId: user.id,
+      userId: user.id!,
       offerId: this.id,
       title: this.title,
       company: this.company,
@@ -101,7 +87,7 @@ export class JobCardComponent {
       dateAdded: new Date().toISOString(),
     };
 
-    this._suiviService.getAllSuivis(user.id).pipe(take(1)).subscribe((suivis) => {
+    this._suiviService.getAllSuivis(user.id!).pipe(take(1)).subscribe((suivis) => {
       const exists = suivis.some(s => s.offerId === this.id && s.userId === user.id);
       if (exists) {
         toast.error('Vous suivez déjà cette candidature !');
