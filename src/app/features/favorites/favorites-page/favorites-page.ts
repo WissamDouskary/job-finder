@@ -33,7 +33,7 @@ export class FavoritesPageComponent implements OnInit {
   }
 
   loadFavorites() {
-    const authUser: userResponse | string | null = localStorage.getItem('user');
+    const authUser: userResponse | string | null = localStorage.getItem('user') ||  sessionStorage.getItem("user");
     if (!authUser) return this._router.navigate(['/login']);
     const user: userResponse = JSON.parse(authUser);
     this._store.dispatch(loadFavorites({ id: user.id }));

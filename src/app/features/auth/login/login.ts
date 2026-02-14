@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Login } from '../../../core/models/login.model';
 import { userResponse } from '../../../core/models/user-response.model';
 import { UserService } from '../../../core/services/users.service';
@@ -19,6 +19,7 @@ export class LoginComponent {
   private _fb = inject(FormBuilder);
   private _userService = inject(UserService);
   private _router = inject(Router);
+  private _route = inject(ActivatedRoute)
 
   loginForm = this._fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -47,12 +48,13 @@ export class LoginComponent {
           nom: user.nom,
           prenom: user.prenom,
           email: user.email,
-          id: user.id
+          id: user.id,
         };
 
         this._userService.saveUser(nUser, rememberMe);
-        toast.success('login successfuly');
-        this._router.navigate(['/jobs']);
+        const returnUrl = this._route.snapshot.queryParamMap.get('returnUrl') || '/jobs';
+        toast.success('login successfully');
+        this._router.navigateByUrl(returnUrl);
       },
       error: () => {
         toast.error('invalid credentials');

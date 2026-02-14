@@ -25,7 +25,7 @@ export class MyJobsPageComponent implements OnInit {
   }
 
   loadSuivis() {
-    const authUser = localStorage.getItem('user');
+    const authUser = localStorage.getItem('user') || sessionStorage.getItem('user');
     if (!authUser) {
       this._router.navigate(['/login']);
       return;
